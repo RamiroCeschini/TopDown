@@ -9,8 +9,24 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        rb.AddForce(Vector3.forward * bulletSpeed);
+        rb.AddRelativeForce(Vector3.right * bulletSpeed);
+        Invoke("DestroyBullet", 3f);
     }
 
-   
+    void DestroyBullet()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+       
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Destroy(collision.gameObject);
+        }
+
+        DestroyBullet();
+    }
+
 }

@@ -6,7 +6,9 @@ public class Gun : MonoBehaviour
 {
     public Transform spawnPoint;
     public GameObject bulletToSpawn;
-    public bool powerUp = false;
+    public ParticleSystem gunSmoke;
+    private float coolDownTime = 1f;
+    private bool coolDown = false;
 
     private void Start()
     {
@@ -15,29 +17,29 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0) && coolDown == false)
         {
-            Shoot();
+                Shoot();
+                Invoke("ResetCoolDown", coolDownTime);
+
         }
     }
 
     private void Shoot()
     {
-        if (powerUp == true)
-        {
+            coolDown = true;
             Instantiate(bulletToSpawn, spawnPoint.position, spawnPoint.rotation);
-            Instantiate(bulletToSpawn, spawnPoint.position, Quaternion.Euler(new Vector3(0f, 0f, 10f)));
-            Instantiate(bulletToSpawn, spawnPoint.position, Quaternion.Euler(new Vector3(0f, 0f, -10f)));
-        }
-        else
-        {
-            Instantiate(bulletToSpawn, spawnPoint.position, spawnPoint.rotation);
-        }
+            Instantiate(gunSmoke, spawnPoint.position, spawnPoint.rotation);
 
+    }
+
+    private void ResetCoolDown()
+    {
+        coolDown = false;
     }
 
     public void PowerUpActive()
     {
-        powerUp = true;
+        coolDownTime -= 0.7f;
     }
 }
